@@ -26,7 +26,7 @@
     tree = d3.tree().nodeSize([dx, dy]); // initializes tree and sets node-size
     diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
 
-    const root = d3.hierarchy(mydata);
+    const root = d3.hierarchy(flare);
 
     root.x0 = dy / 2;
     root.y0 = 0;
