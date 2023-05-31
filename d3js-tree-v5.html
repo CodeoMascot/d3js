@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  /* set the CSS */
+
+  .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 2px;
+    /* default width is 2, radius is in code */
+  }
+
+  .node text {
+    font: 12px sans-serif;
+  }
+
+  .node--internal text {
+    text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+  }
+
+  /* node to node line */
+  .link {
+    fill: none;
+    stroke: #555;
+    stroke-opacity: 0.2;
+    stroke-width: 2px;
+  }
+</style>
+
+<body>
+
+  <!-- load the d3.js library -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="./questionnaire-v1.0.js"></script>
+  <script>
+
+    // flare = d3.json("sample-2-level-a-b.json")
+    flare = { "name": "Top Level", "children": [{ "name": "Level 2: A", "children": [{ "name": "Son of A" }, { "name": "Daughter of A" }] }, { "name": "Level 2: B" }] }
+    // var flare = mydata;
+
+    // set the dimensions and margins of the diagram
+    var margin = { top: 10, right: 250, bottom: 10, left: 80 },
+      width = 1560 - margin.left - margin.right,
+      height = 960 - margin.top - margin.bottom; // also defines vertical distance between nodes
+
+    // declares a tree layout and assigns the size
+    var treemap = d3.tree()
+      .size([height, width]);
+
+    //  assigns the data to a hierarchy using parent-child relationships
+    var nodes = d3.hierarchy(flare, function (d) {
+      return d.children;
+    });
+
+    // maps the node data to the tree layout
+    nodes = treemap(nodes);
+
+    // append the svg object to the body of the page
+    // appends a 'group' element to 'svg'
+    // moves the 'group' element to the top left margin
+    var svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+
+    var g = svg.append("g")
+      .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+    // adds the links between the nodes, dot to dot line
+    var link = g.selectAll(".link")
+      .data(nodes.descendants().slice(1))
+      .enter().append("path")
+      .attr("class", "link")
+      .attr("d", function (d) {
+        return "M" + d.y + "," + d.x
+          + "C" + (d.y + d.parent.y) / 2 + "," + d.x
+          + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
+          + " " + d.parent.y + "," + d.parent.x;
+      });
+
+    // adds each node as a group
+    var node = g.selectAll(".node") // adds css class to g,
+      .data(nodes.descendants())
+      .enter().append("g")
+      .attr("class", function (d) {
+        return "node" +
+          (d.children ? " node--internal" : " node--leaf");
+      })
+      .attr("transform", function (d) {
+        return "translate(" + d.y + "," + d.x + ")";
+      });
+
+    // adds the circle to the node, design in css
+    node.append("circle")
+      .attr("r", 5); // radius of circle, default 10
+
+    // adds the text to the node
+    node.append("text")
+      .attr("dy", ".35em") // vertical height of text
+      .attr("x", function (d) { return d.children ? -10 : 10; }) // left-right of node dot
+      .style("text-anchor", function (d) {
+        return d.children ? "end" : "start";
+      })
+      .text(function (d) { return d.data.name; });
+
+  </script>
+</body>
