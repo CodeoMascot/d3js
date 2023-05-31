@@ -4,7 +4,7 @@ To see preview of the files visit
 
 - [Tree using D3 v7](https://codeomascot.github.io/d3js-examples/d3js-tree-v7.html) - with label and link
 - [Tree using D3 v5](https://codeomascot.github.io/d3js-examples/d3js-tree-v5.html) - with CSS modifications
-- [Collapsible Tree using D3 v7](https://codeomascot.github.io/d3js-examples/d3js-collapsible-tree-v7.html.html) - with interactivity
+- [Collapsible Tree using D3 v7](https://codeomascot.github.io/d3js-examples/d3js-collapsible-tree-v7.html) - with interactivity
 
 Links
 
